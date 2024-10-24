@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Backend.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
@@ -7,25 +9,41 @@ namespace Backend.Controllers
 
     public class PersonaController : Controller
     {
+        private IPersonaServices _personaServices;
+
+        public PersonaController([FromKeyedServices("personaservices")]IPersonaServices personaService)
+        {
+            _personaServices = personaService;
+        }
+
         [HttpGet("all")]
         public List<PersonaDatos> GetPersonaDatos() => Repository.persona;
 
         [HttpGet("{id}")]
-        public PersonaDatos GetPersonaDatos(int id) => Repository.persona.FirstOrDefault(p => p.id == id);
-
-        [HttpGet("search/{search}")]
-        public List<PersonaDatos> Get(string search) =>
-            Repository.persona.Where( p => p.name.ToUpper().Contains(search.ToUpper())).ToList();
-
-        [HttpGet("{id}")]
-        public ActionResult<PersonaDatos> Get(int id) {
+        public ActionResult<PersonaDatos> Get(int id)
+        {
             var persona = Repository.persona.FirstOrDefault(p => p.id == id);
-                
+
             if (persona == null)
             {
                 return NotFound();
             }
             return Ok(persona);
+        }
+
+        [HttpGet("search/{search}")]
+        public List<PersonaDatos> Get(string search) =>
+            Repository.persona.Where(p => p.name.ToUpper().Contains(search.ToUpper())).ToList();
+
+        [HttpPost]
+        public IActionResult Add(PersonaDatos persona)
+        {
+            if (!_personaServices.validate(persona))
+            {
+                return BadRequest();
+            }
+            Repository.persona.Add(persona);
+            return NoContent();
         }
     }
 }

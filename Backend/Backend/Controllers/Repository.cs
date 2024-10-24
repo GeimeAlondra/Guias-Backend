@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Xml.Linq;
-using static Backend.Controllers.PersonaController;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
 {
     public class Repository
     {
         public static List<PersonaDatos> persona = new List<PersonaDatos> {
-            
+
             new PersonaDatos(){
                 id = 1,
                 age= new DateTime(1994,08,03),
@@ -35,4 +34,3 @@ public class PersonaDatos
     public string name { get; set; }
     public DateTime age { get; set; }
 }
-
