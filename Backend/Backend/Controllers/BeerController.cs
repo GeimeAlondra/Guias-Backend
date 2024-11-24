@@ -1,8 +1,10 @@
 ﻿using Backend.DTOs;
 using Backend.Models;
+using Backend.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 
@@ -17,29 +19,33 @@ namespace Backend.Controllers
         private IValidator<BeerInsertDto> _beerInsertValidator;
         private IValidator<BeerUpdateDto> _beerUpdateValidator;
 
+        private IBeerServices _beerService;
+
         public BeerController(
              StoreContext storeContext,
              IValidator<BeerInsertDto> beerInsertValidators,
-             IValidator<BeerUpdateDto> beerUpdateValidators)
+             IValidator<BeerUpdateDto> beerUpdateValidators,
+             IBeerServices beerServices)
         {
             _storeContext = storeContext;
             _beerInsertValidator = beerInsertValidators;
             _beerUpdateValidator = beerUpdateValidators;
+            _beerService = beerServices;
         }
 
         [HttpGet]
         public async Task<IEnumerable<BeerDto>> Get() =>
-            await _storeContext.Beers.Select(b => new BeerDto
-            {
-                Id = b.BrandId,
-                Al = b.Al,
-                BrandID = b.BrandId,
-                Name = b.BeerName
-            }).ToListAsync();
+           await _storeContext.Beers.Select(b => new BeerDto
+           {
+               Id = b.BrandId,
+               Al = b.Al,
+               BrandID = b.BrandId,
+               Name = b.BeerName
+           }).ToListAsync();
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BeerDto>> GetById(int id) {
-    
+        public async Task<ActionResult<BeerDto>> GetById(int id)
+        {
             var beer = await _storeContext.Beers.FindAsync(id);
             if (beer == null)
             {
@@ -48,11 +54,12 @@ namespace Backend.Controllers
 
             var beerDto = new BeerDto
             {
-                Id = beer.BrandId,
+                Id = beer.BeerId,
                 Al = beer.Al,
                 BrandID = beer.BrandId,
                 Name = beer.BeerName
             };
+
             return Ok(beerDto);
         }
 
@@ -60,6 +67,7 @@ namespace Backend.Controllers
         public async Task<ActionResult<BeerDto>> Add(BeerInsertDto beerInsertDto)
         {
             var validationREsult = await _beerInsertValidator.ValidateAsync(beerInsertDto);
+
             if (!validationREsult.IsValid)
             {
                 return BadRequest(validationREsult.Errors);
@@ -71,6 +79,7 @@ namespace Backend.Controllers
                 BrandId = beerInsertDto.BrandID,
                 Al = beerInsertDto.Al
             };
+
             await _storeContext.Beers.AddAsync(beer);
             await _storeContext.SaveChangesAsync();
 
@@ -89,6 +98,7 @@ namespace Backend.Controllers
            int id, BeerUpdateDto beerUpdateDto)
         {
             var validationResult = await _beerUpdateValidator.ValidateAsync(beerUpdateDto);
+
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
@@ -116,7 +126,7 @@ namespace Backend.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult<BeerDto>> Delete(int id)
         {
             var beer = await _storeContext.Beers.FindAsync(id);
             if (beer == null)
@@ -126,7 +136,15 @@ namespace Backend.Controllers
             _storeContext.Beers.Remove(beer);
             await _storeContext.SaveChangesAsync();
 
-            return Ok();
+            var beerDto = new BeerDto
+            {
+                Id = beer.BeerId,
+                Name = beer.BeerName,
+                BrandID = beer.BrandId,
+                Al = beer.Al
+            };
+
+            return Ok(beerDto);
         }
     }
 }

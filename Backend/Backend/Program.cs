@@ -22,6 +22,9 @@ builder.Services.AddScoped<IPostService, PostService>();
 
 builder.Services.AddHttpClient<IPostService, PostService>();
 
+// Beer Service
+builder.Services.AddScoped<IBeerServices, BeerService>();
+
 // Entity Framework
 builder.Services.AddHttpClient<IPostService, PostService>(
     c => c.BaseAddress = new Uri(builder.Configuration["BaseUrlPost"]));
