@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "GmSL3fg4d+xeHMOH5l1zuZAVVb2DmYex+wtrvTLDQ1zZweu/wgejDUx6KzGhd5bxHZqo2OX+hNPVrbXz0CdNJQ==",
+  "dgSpecHash": "14HzSn6B4ZR6r9yvH4EdAORFSNLYSPRsZfQhrMQedlHyddEyQeoU4bLOHB4/+es0mJdrwYnYbxgw1DlBvgweGw==",
   "success": true,
   "projectFilePath": "D:\\Usuarios\\Alondra\\Documents\\UNAB\\CICLO IV - 2024 - UNAB\\sPG2-20\\Periodo 2\\Guias-Backend\\Backend\\Backend\\Backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Alondra\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Alondra\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\Alondra\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
     "C:\\Users\\Alondra\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Alondra\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\Alondra\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
