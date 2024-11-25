@@ -5,7 +5,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Backend.Services
 {
-    public class BeerService : IBeerServices
+    public class BeerService : ICommonBeerServices<BeerDto, BeerInsertDto, BeerUpdateDto>
     {
         private StoreContext _storeContext;
 
