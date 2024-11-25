@@ -1,5 +1,6 @@
 ﻿using Backend.DTOs;
 using Backend.Models;
+using Backend.Repository;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 
@@ -8,32 +9,35 @@ namespace Backend.Services
     public class BeerService : ICommonBeerServices<BeerDto, BeerInsertDto, BeerUpdateDto>
     {
         private StoreContext _storeContext;
+        private IRepository<Beer> _beerRepository;
 
-        public BeerService(StoreContext storeContext)
+        public BeerService(StoreContext storeContext, IRepository<Beer> beerRepository)
         {
             _storeContext = storeContext;
+            _beerRepository = beerRepository;
         }
 
         public async Task<IEnumerable<BeerDto>> Get()
         {
-            return await _storeContext.Beers.Select(b => new BeerDto
+            var beer = await _beerRepository.Get();
+            return beer.Select(x => new BeerDto()
             {
-                Id = b.BrandId,
-                Al = b.Al,
-                BrandID = b.BrandId,
-                Name = b.BeerName
-            }).ToListAsync();
+                Id = x.BeerId,
+                Name = x.BeerName,
+                BrandID = x.BrandId,
+                Al = x.Al,
+            });
         }
 
         public async Task<BeerDto> GetById(int id)
         {
-            var beer = await _storeContext.Beers.FindAsync(id);
+            var beer = await _beerRepository.GetById(id);
 
             if (beer != null)
             {
                 var beerDto = new BeerDto
                 {
-                    Id = beer.BrandId,
+                    Id = beer.BeerId,
                     Al = beer.Al,
                     BrandID = beer.BrandId,
                     Name = beer.BeerName
