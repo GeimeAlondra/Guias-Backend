@@ -26,10 +26,7 @@ namespace Backend.Repository
             _storeContext.Entry(entity).State = EntityState.Modified;
         }
 
-        public void Delete(Beer entity)
-        {
-            throw new NotImplementedException();
-        }
+        public void Delete(Beer entity) => _storeContext.Beers.Remove(entity);
 
         public async Task Save() => _storeContext.SaveChanges();
     }
