@@ -1,3 +1,4 @@
+using Backend.Automappers;
 using Backend.DTOs;
 using Backend.Models;
 using Backend.Repository;
@@ -28,6 +29,9 @@ builder.Services.AddKeyedScoped<ICommonBeerServices<BeerDto, BeerInsertDto, Beer
 
 // Repositoty
 builder.Services.AddScoped<IRepository<Beer>, BeerRepository>();
+
+//Mapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Entity Framework
 builder.Services.AddHttpClient<IPostService, PostService>(
