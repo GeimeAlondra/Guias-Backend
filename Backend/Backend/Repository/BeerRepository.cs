@@ -29,5 +29,7 @@ namespace Backend.Repository
         public void Delete(Beer entity) => _storeContext.Beers.Remove(entity);
 
         public async Task Save() => _storeContext.SaveChanges();
+
+        public IEnumerable<Beer> Search(Func<Beer, bool> filter) => _storeContext.Beers.Where(filter).ToList();
     }
 }

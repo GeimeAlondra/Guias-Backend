@@ -3,19 +3,26 @@ using Backend.DTOs;
 using Backend.Models;
 using Backend.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.Reflection.Metadata.Ecma335;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Backend.Services
 {
     public class BeerService : ICommonBeerServices<BeerDto, BeerInsertDto, BeerUpdateDto>
     {
+        public List<string> Errors { get; }
+
         private IRepository<Beer> _beerRepository;
         private IMapper _mapper;
+
+        List<string> ICommonBeerServices<BeerDto, BeerInsertDto, BeerUpdateDto>.Errors => throw new NotImplementedException();
 
         public BeerService(IRepository<Beer> beerRepository, IMapper mapper)
         {
             _beerRepository = beerRepository;
             _mapper = mapper;
+            Errors = new List<string>();
         }
 
         public async Task<IEnumerable<BeerDto>> Get()
@@ -81,6 +88,26 @@ namespace Backend.Services
                 return beerDto;
             }
             return null;
+        }
+
+        public bool validate(BeerInsertDto beerInsertDto)
+        {
+            if (_beerRepository.Search(bdto => bdto.BeerName == beerInsertDto.Name).Count() > 0)
+            {
+                Errors.Add("Ya existe el nombre en la base de datos");
+            }
+            return true;
+        }
+
+        public bool validate(BeerUpdateDto beerUpdateDto)
+        {
+            if (_beerRepository.Search(bdto => bdto.BeerName == beerUpdateDto.Name
+             && beerUpdateDto.Id != bdto.BeerId).Count() > 0)
+            {
+                Errors.Add("Ya existe el nombre en la base de datos");
+                return false;
+            }
+            return true;
         }
     }
 }
